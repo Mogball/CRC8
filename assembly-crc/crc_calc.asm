@@ -1,32 +1,44 @@
 global crc_calc:
 
+;
+; uint8_t crc_calc(uint8_t message[8], uint8_t table[256])
+;
+; [ebp+08H] = message + 0
+; [ebp+0CH] = table + 0
+;
+
 crc_calc:
     push    ebp
     mov     ebp, esp
-    sub     esp, 8
-    mov     byte [ebp-1H], 0
+    
+    mov     ebx, [ebp+8H]
     mov     ecx, 0
-    jmp     ?_exit
 
-?_loop:
-    mov     eax, dword [ebp+8H]
-    add     eax, ecx
-    movzx   eax, byte [eax]
-    xor     al, byte [ebp-1H]
-    movzx   edx, al
-    mov     eax, dword [ebp+0CH]
+    ; 8 loops
+    ; for (byte = 0; byte < 8; ++byte)    
+    call inner_loop
+    call inner_loop
+    call inner_loop
+    call inner_loop
+    call inner_loop
+    call inner_loop
+    call inner_loop
+    call inner_loop
+
+    leave
+    ret
+
+inner_loop:
+    movzx   eax, byte [ebx]
+    xor     al, cl
+    movzx   edx, al 
+    mov     eax, [ebp+0CH]
     add     eax, edx
     movzx   edx, byte [eax]
-    movzx   ax, byte [ebp-1H]
+    movzx   eax, cl
     shl     ax, 8
     xor     ax, dx
-    mov     byte [ebp-1H], al
-    add     cl, 1
-
-?_exit:
-    cmp     cl, 7
-    jbe     ?_loop
-    movzx   eax, byte [ebp-1H]
-    leave
+    mov     cl, al
+    add     ebx, 1
     ret
 
