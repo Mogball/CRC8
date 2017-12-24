@@ -10,5 +10,5 @@ add.o: add.asm
 	nasm -f elf32 add.asm -o add.o
 
 clean:
-	rm *.o add_asm
+	rm *.o add_asm.exe
 
