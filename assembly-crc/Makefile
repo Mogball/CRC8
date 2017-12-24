@@ -6,8 +6,8 @@ crc_asm: main.o crc_table_init.o crc_calc.o
 main.o: main.c
 	gcc -m32 -c main.c
 
-crc_table_init.o: crc_table_init.c
-	gcc -m32 -c crc_table_init.c
+crc_table_init.o: crc_table_init.asm
+	nasm -f elf32 crc_table_init.asm
 
 crc_calc.o: crc_calc.asm
 	nasm -f elf32 crc_calc.asm
