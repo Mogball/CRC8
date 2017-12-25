@@ -12,7 +12,7 @@ crc_calc:
     mov     ebp, esp
     
     mov     ebx, [ebp+8H]
-    mov     ecx, 0
+    mov     eax, 0
 
     ; 8 loops
     ; for (byte = 0; byte < 8; ++byte)    
@@ -29,16 +29,14 @@ crc_calc:
     ret
 
 inner_loop:
-    movzx   eax, byte [ebx]
-    xor     al, cl
-    movzx   edx, al 
+    ; data = messages[i] ^ remainder
+    movzx   edx, byte [ebx]
+    xor     dl, al
+    ; remainder = table[data]
     mov     eax, [ebp+0CH]
     add     eax, edx
-    movzx   edx, byte [eax]
-    movzx   eax, cl
-    shl     ax, 8
-    xor     ax, dx
-    mov     cl, al
+    movzx   eax, byte [eax]
+    ; ++i
     add     ebx, 1
     ret
 
